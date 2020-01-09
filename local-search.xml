@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>Hello Hello</title>
+    <link href="/2020/01/09/hello-world/"/>
+    <url>/2020/01/09/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Hexo</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>MYSQL优化</title>
+    <link href="/2019/10/10/MYSQL%E4%BC%98%E5%8C%96/"/>
+    <url>/2019/10/10/MYSQL%E4%BC%98%E5%8C%96/</url>
+    
+    <content type="html"><![CDATA[<h2 id="1-MySQL常见索引和各种索引区别"><a href="#1-MySQL常见索引和各种索引区别" class="headerlink" title="1.MySQL常见索引和各种索引区别"></a>1.MySQL常见索引和各种索引区别</h2><pre><code class="SQL">PRIMARY KEY（主键索引）  ALTER TABLE `table_name` ADD PRIMARY KEY ( `column` ) UNIQUE(唯一索引)     ALTER TABLE `table_name` ADD UNIQUE (`column`)INDEX(普通索引)     ALTER TABLE `table_name` ADD INDEX index_name ( `column` ) FULLTEXT(全文索引)      ALTER TABLE `table_name` ADD FULLTEXT ( `column` )组合索引   ALTER TABLE `table_name` ADD INDEX index_name ( `column1`, `column2`, `column3` ) </code></pre><ul><li>普通索引：最基本的索引，没有任何限制</li><li>唯一索引：与”普通索引”类似，不同的就是：索引列的值必须唯一，但允许有空值。</li><li>主键索引：它 是一种特殊的唯一索引，不允许有空值。</li><li>全文索引：仅可用于 <code>MyISAM</code> 表，针对较大的数据，生成全文索引很耗时耗空间。</li><li>组合索引：为了更多的提高mysql效率可建立组合索引，遵循”最左前缀”原则。</li></ul><ol start="2"><li>覆盖索引</li></ol><hr><p>跟组合索引有点类似，如果索引包含所有满足查询需要的数据的索引则成为覆盖索引(Covering Index)，也就是平时所说的不需要回表操作</p><p>判断标准：使用explain，可以通过输出的extra列来判断，对于一个索引覆盖查询，显示为using index,MySQL查询优化器在执行查询前会决定是否有索引覆盖查询</p><h2 id="3-SQL优化口诀"><a href="#3-SQL优化口诀" class="headerlink" title="3.SQL优化口诀"></a>3.SQL优化口诀</h2><pre><code>全值匹配我最爱，最左前缀要遵守；带头大哥不能死，中间兄弟不能断；索引列上不计算，范围之后全失效；LIKE百分写最右，覆盖索引不写 *；不等空值还有or，索引失效要少用；字符单引不可丢，SQL高级也不难 ；</code></pre><h2 id="4-建索引的几大原则"><a href="#4-建索引的几大原则" class="headerlink" title="4.建索引的几大原则"></a>4.建索引的几大原则</h2><p>1.最左前缀匹配原则，非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</p><p>2.=和in可以乱序，比如a = 1 and b = 2 and c = 3 建立(a,b,c)索引可以任意顺序，mysql的查询优化器会帮你优化成索引可以识别的形式。</p><p>3.尽量选择区分度高的列作为索引，区分度的公式是count(distinct col)/count(*)，表示字段不重复的比例，比例越大我们扫描的记录数越少，唯一键的区分度是1，而一些状态、性别字段可能在大数据面前区分度就是0，那可能有人会问，这个比例有什么经验值吗？使用场景不同，这个值也很难确定，一般需要join的字段我们都要求是0.1以上，即平均1条扫描10条记录。</p><p>4.索引列不能参与计算，保持列“干净”，比如from_unixtime(create_time) = ’2014-05-29’就不能使用到索引，原因很简单，b+树中存的都是数据表中的字段值，但进行检索时，需要把所有元素都应用函数才能比较，显然成本太大。所以语句应该写成create_time = unix_timestamp(’2014-05-29’)。</p><p>5.尽量的扩展索引，不要新建索引。比如表中已经有a的索引，现在要加(a,b)的索引，那么只需要修改原来的索引即可。</p><h2 id="5-sql执行顺序"><a href="#5-sql执行顺序" class="headerlink" title="5.sql执行顺序 "></a>5.sql执行顺序 </h2><pre><code class="sql">(1)from (2) join (3) on (4) where (5)group by(开始使用select中的别名，后面的语句中都可以使用)(6) avg,sum.... (7)having (8) select (9) distinct (10) order by (11) limit</code></pre><h2 id="6-MySQL-单表数据达到多少时才需要考虑分库分表？"><a href="#6-MySQL-单表数据达到多少时才需要考虑分库分表？" class="headerlink" title="6.MySQL 单表数据达到多少时才需要考虑分库分表？"></a>6.MySQL 单表数据达到多少时才需要考虑分库分表？</h2><p>曾经在中国互联网技术圈广为流传着这么一个说法：MySQL 单表数据量大于 2000<br>万行，性能会明显下降。事实上，这个传闻据说最早起源于百度。具体情况大概是这样的，当年的 DBA<br>测试 MySQL性能时发现，当单表的量在 2000 万行量级的时候，SQL<br>操作的性能急剧下降，因此，结论由此而来。然后又据说百度的工程师流动到业界的其它公司，也带去了<br>这个信息，所以，就在业界流传开这么一个说法。</p><p>再后来，阿里巴巴《Java 开发手册》提出单表行数超过 500 万行或者单表容量超过<br>2GB，才推荐进行分库分表。对此，有阿里的黄金铁律支撑，所以，很多人设计大数据存储时，多会以此<br>为标准，进行分表操作。</p><p>那么，你觉得这个数值多少才合适呢？为什么不是 300 万行，或者是 800 万行，而是 500 万行？也许你会说这个可能就是阿里的最佳实战的数值吧？那么，问题又来了，这个数值是如何评估出来的呢？</p><p>事实上，这个数值和实际记录的条数无关，而与 MySQL 的配置以及机器的硬件有关。因为，MySQL 为了提高性能，会将表的索引装载到内存中。InnoDB buffer size 足够的情况下，其能完成全加载进内存，查询不会有问题。但是，当单表数据库到达某个量级的上限时，导致内存无法存储其索引，使得之后的 SQL 查询会产生磁盘 IO，从而导致性能下降。当然，这个还有具体的表结构的设计有关，最终导致的问题都是内存限制。这里，增加硬件配置，可能会带来立竿见影的性能提升</p><p>阿里巴巴《Java 开发手册》补充到：如果预计三年后的数据量根本达不到这个级别，请不要在创建表时就分库分表。那么，回到一开始的问题，你觉得这个数值多少才合适呢？我的建议是，根据自身的机器的情况综合评估，如果心里没有标准，那么暂时以 500 万行作为一个统一的标准，相对而言算是一个比较折中的数值</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Hexo</tag>
+      
+      <tag>Fluid</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
