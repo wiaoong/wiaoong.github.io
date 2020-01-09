@@ -131,7 +131,7 @@
                   
                   &nbsp;<i class="far fa-chart-bar"></i>
                   <span class="post-count">
-                    463 字
+                    583 字
                   </span>&nbsp;
                 
 
@@ -139,7 +139,7 @@
                   
                   &nbsp;<i class="far fa-clock"></i>
                   <span class="post-count">
-                      1 分钟
+                      2 分钟
                   </span>&nbsp;
                 
 
@@ -219,8 +219,18 @@ hexo server   //可以简写成 hexo s  还可以自定义端口 -P 8080</code><
 <pre><code class="cmd">hexo g -d //提交到github,这条命令是编译和提交的组合</code></pre>
 <p>　　此时,访问你的<code>your_github_name.github.io</code> 已经能看到了。</p>
 <h2 id="百度统计"><a href="#百度统计" class="headerlink" title="百度统计"></a>百度统计</h2><p>百度统计的设置<br><a href="https://tongji.baidu.com/" target="_blank" rel="noopener">百度统计</a><br>到这里注册个账号-&gt;添加网站-&gt;获取JS</p>
-<p><img src="https://github.com/wiaoong/wiaoong.github.io/blob/master/img/baidu1.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://github.com/wiaoong/wiaoong.github.io/blob/master/img/baidu2.png" srcset="/img/loading.gif" alt=""></p>
+<img src="/img/baidu1.png" srcset="/img/loading.gif"/>
+
+<img src="/img/baidu2.png" srcset="/img/loading.gif"/>
+
+<p>到Hexo的_config.yml中配置</p>
+<pre><code class="yml">web_analytics:  # 网页访问统计
+  enable: true
+  baidu:  58bfd1bebe5f57cef4efafa23de7d01e # 百度统计的Key，参见 https://tongji.baidu.com/sc-web/10000033910/home/site/getjs?siteId=13751376 代码获取中 hm.js? 后边的字符串
+  google:  # Google统计的Tracking ID，参见 https://analytics.google.com/analytics/web/
+  tencent:  # 腾讯统计的H5 App id，参见 https://mta.qq.com/h5/manage/ctr_app_manage
+  woyaola:  # 51.la站点统计ID，参见 https://www.51.la/user/site/index
+  cnzz:  # 友盟/cnzz站点统计web_id，参见 https://web.umeng.com/main.php?c=site&amp;a=show</code></pre>
 <h2 id="评论-gittalk"><a href="#评论-gittalk" class="headerlink" title="评论-gittalk"></a>评论-gittalk</h2>
             <hr>
           </div>
