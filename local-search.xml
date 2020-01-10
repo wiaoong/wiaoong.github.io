@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Nginx</title>
+    <link href="/2020/01/10/nginx/"/>
+    <url>/2020/01/10/nginx/</url>
+    
+    <content type="html"><![CDATA[<p>Nginx 安装、Nginx 配置文件</p><a id="more"></a><h2 id="Nginx配置文件结构"><a href="#Nginx配置文件结构" class="headerlink" title="Nginx配置文件结构"></a>Nginx配置文件结构</h2><pre><code class="conf">...              #全局块events {         #events块   ...}http      #http块{    ...   #http全局块    server        #server块    {         ...       #server全局块        location [PATTERN]   #location块        {            ...        }        location [PATTERN]         {            ...        }    }    server    {      ...    }    ...     #http全局块}</code></pre><div style="text-align:center"><img src="/img/nginx/nginx_conf.png" srcset="/img/loading.gif"/></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>Nginx</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Nginx</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hexo建博客,使用Fluid主题</title>
     <link href="/2020/01/09/hexo+fluid/"/>
     <url>/2020/01/09/hexo+fluid/</url>
