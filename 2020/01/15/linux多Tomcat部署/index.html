@@ -16,7 +16,7 @@
   <meta name="description" content="学习记录">
   <meta name="author" content="wiaoong">
   <meta name="keywords" content="">
-  <title>凡尘</title>
+  <title>linux多Tomcat部署 ~ 凡尘</title>
 
   <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"  >
 <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  >
@@ -39,7 +39,7 @@
 
 
 <body>
-  <header style="height: 100vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -107,7 +107,7 @@
 </nav>
 
     <div class="view intro-2" id="background"
-         style="background: url('/img/default.png')no-repeat center center;
+         style="background: url('/img/tomcat/tomcat_big.png')no-repeat center center;
            background-size: cover;
            background-attachment: fixed;">
       <div class="full-bg-img">
@@ -118,12 +118,43 @@
             </span>
 
             
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  Wednesday, January 15th 2020, 7:00 pm
+                </p>
+              
+
+              <p>
+                
+                  
+                  &nbsp;<i class="far fa-chart-bar"></i>
+                  <span class="post-count">
+                    336 字
+                  </span>&nbsp;
+                
+
+                
+                  
+                  &nbsp;<i class="far fa-clock"></i>
+                  <span class="post-count">
+                      1 分钟
+                  </span>&nbsp;
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  &nbsp;<i class="far fa-eye" aria-hidden="true"></i>&nbsp;
+                  <span id="busuanzi_container_page_pv">
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>&nbsp;
+                
+              </p>
+            
           </div>
 
-          
-            <div class="scroll-down-bar">
-              <i class="fas fa-angle-down scroll-down-arrow"></i>
-            </div>
           
         </div>
       </div>
@@ -132,196 +163,126 @@
 
   <main>
     
-      <div class="container nopadding-md">
-        <div class="py-5 z-depth-3" id="board">
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <p>linux下多Tomcat部署</p>
+<a id="more"></a>
+
+<h2 id="步骤1：安装完tomcat后-直接在原目录下复制一份-分别重命名为tomcat1-tomcat2"><a href="#步骤1：安装完tomcat后-直接在原目录下复制一份-分别重命名为tomcat1-tomcat2" class="headerlink" title="步骤1：安装完tomcat后,直接在原目录下复制一份,分别重命名为tomcat1,tomcat2"></a>步骤1：安装完tomcat后,直接在原目录下复制一份,分别重命名为tomcat1,tomcat2</h2><h2 id="步骤2-到根目录-etc-profile中添加如下部署"><a href="#步骤2-到根目录-etc-profile中添加如下部署" class="headerlink" title="步骤2:到根目录 /etc/profile中添加如下部署"></a>步骤2:到根目录 /etc/profile中添加如下部署</h2><pre><code>export JAVA_HOME=/usr/local/jdk/jdk1.8.0_211
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+
+##上边不变,新增如下
+#tomcat1
+export CATALINA_HOME=/usr/local/tomcat/tomcat1
+export CATALINA_BASE=/usr/local/tomcat/tomcat1
+export TOMCAT_HOME=/usr/local/tomcat/tomcat1
+
+#tomcat2
+export CATALINA_HOME2=/usr/local/tomcat/tomcat2
+export CATALINA_BASE2=/usr/local/tomcat/tomcat2
+export TOMCAT_HOME2=/usr/local/tomcat/tomcat2</code></pre><h2 id="步骤3：修改tomcat2的conf下server-xml中的端口-不重复就行"><a href="#步骤3：修改tomcat2的conf下server-xml中的端口-不重复就行" class="headerlink" title="步骤3：修改tomcat2的conf下server.xml中的端口,不重复就行"></a>步骤3：修改tomcat2的conf下server.xml中的端口,不重复就行</h2><pre><code class="xml">&lt;Server port=&quot;8006&quot; shutdown=&quot;SHUTDOWN&quot;&gt;
+...
+&lt;Connector port=&quot;8081&quot; protocol=&quot;HTTP/1.1&quot;
+               connectionTimeout=&quot;20000&quot;
+               redirectPort=&quot;8444&quot; /&gt;
+&lt;Connector port=&quot;8010&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8444&quot; /&gt;
+...</code></pre>
+<p>这些端口和tomcat1的配置不冲突就行。</p>
+<h2 id="步骤4：修改tomcat2的startup-sh"><a href="#步骤4：修改tomcat2的startup-sh" class="headerlink" title="步骤4：修改tomcat2的startup.sh"></a>步骤4：修改tomcat2的startup.sh</h2><pre><code class="batch"># Check that target executable exists
+if $os400; then
+  # -x will Only work on the os400 if the files are:
+  # 1. owned by the user
+  # 2. owned by the PRIMARY group of the user
+  # this will not work if the user belongs in secondary groups
+  eval
+else
+  if [ ! -x &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; ]; then
+    echo &quot;Cannot find $PRGDIR/$EXECUTABLE&quot;
+    echo &quot;The file is absent or does not have execute permission&quot;
+    echo &quot;This file is needed to run this program&quot;
+    exit 1
+  fi
+fi
+
+#添加这两行
+export CATALINA_HOME=$CATALINA_HOME2
+export CATALINA_BASE=$CATALINA_BASE2
+
+exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; start &quot;$@&quot;</code></pre>
+<hr>
+<p>ok,到此,tomcat2就可以正常启动了,不影响tomcat1的运行</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
                 
-
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/2020/01/15/linux%E5%A4%9ATomcat%E9%83%A8%E7%BD%B2/" target="_blank">
-          <img src="/img/tomcat/tomcat_s.png" srcset="/img/loading.gif" alt="linux多Tomcat部署" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/15/linux%E5%A4%9ATomcat%E9%83%A8%E7%BD%B2/">
-        <p class="h4 index-header">linux多Tomcat部署</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">linux下多Tomcat部署...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-15&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/linux">linux</a>&nbsp;
-          
-            <a href="/categories/Tomcat">Tomcat</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/linux">linux</a>&nbsp;
-          
-            <a href="/tags/Tomcat">Tomcat</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/2020/01/10/nginx/" target="_blank">
-          <img src="/img/nginx/nginx_s.png" srcset="/img/loading.gif" alt="Nginx" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/10/nginx/">
-        <p class="h4 index-header">Nginx</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">Nginx 安装、Nginx 配置文件...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-10&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Nginx">Nginx</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Nginx">Nginx</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/2020/01/09/hexo+fluid/" target="_blank">
-          <img src="/img/dandong2.jpg" srcset="/img/loading.gif" alt="Hexo建博客,使用Fluid主题" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/09/hexo+fluid/">
-        <p class="h4 index-header">Hexo建博客,使用Fluid主题</p>
-        
-        
-          
-          
-        
-        <div class="index-excerpt" style="max-height: none;">
-          <div class="index-text mb-1">Hexo+github.io模式配置简单,功能强大,没有服务器也可创建属于自己的在线博客...</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-09&nbsp;&nbsp;
-        
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Hexo">Hexo</a>&nbsp;
-          
-            <a href="/tags/Fluid">Fluid</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/2020/01/09/hello-world/" target="_blank">
-          <img src="/img/dandong2.jpg" srcset="/img/loading.gif" alt="Hello Hello" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/2020/01/09/hello-world/">
-        <p class="h4 index-header">Hello Hello</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post$ hexo new &quot;My New Post&quot;
-More info: Writing
-Run server$ hexo server
-More info: Server
-Generate static files$ hexo generate
-More info: Generating
-Deploy to remote sites$ hexo deploy
-More info: Deployment
-</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-09&nbsp;&nbsp;
-        
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Hexo">Hexo</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-
-
-
-
-              </div>
-            </div>
+                  <a class="hover-with-bg" href="/categories/linux">linux</a>
+                  &nbsp;
+                
+                  <a class="hover-with-bg" href="/categories/Tomcat">Tomcat</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/linux">linux</a>
+                
+                  <a class="hover-with-bg" href="/tags/Tomcat">Tomcat</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+            
           </div>
         </div>
       </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;TOC</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="/img/qrcode.png" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><p class="text-center">我的微信：凡尘</p>
+    </div>
+  </div>
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
     
   </main>
 
@@ -400,6 +361,11 @@ More info: Deployment
 
 
 
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
 
 
   <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
@@ -451,7 +417,7 @@ More info: Deployment
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "tree new be&nbsp;",
+        "linux多Tomcat部署&nbsp;",
       ],
       cursorChar: "|",
       typeSpeed: 70,
