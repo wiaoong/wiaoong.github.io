@@ -131,7 +131,7 @@
                   
                   &nbsp;<i class="far fa-chart-bar"></i>
                   <span class="post-count">
-                    46 字
+                    118 字
                   </span>&nbsp;
                 
 
@@ -203,6 +203,25 @@ http      #http块
     ...     #http全局块
 }</code></pre>
 <div style="text-align:center"><img src="/img/nginx/nginx_conf.png" srcset="/img/loading.gif"/></div>
+
+
+<h2 id="linux-部署Nginx"><a href="#linux-部署Nginx" class="headerlink" title="linux 部署Nginx"></a>linux 部署Nginx</h2><pre><code class="cmd">yum -y install zlib zlib-devel openssl openssl-devel pcre pcre-devel  
+yum install -y pcre pcre-devel openssl openssl-devel gcc gcc gcc-c++ ncurses-devel perl
+
+tar -zxvf nginx-1.7.6.tar.gz  
+
+cd nginx-1.7.6
+./configure   
+make
+make install  
+
+##切换到/usr/local/nginx 目录
+$ cd sbin
+$ ./nginx
+
+
+查找是否安装软件
+yum list installed | grep ruby</code></pre>
 
             <hr>
           </div>
