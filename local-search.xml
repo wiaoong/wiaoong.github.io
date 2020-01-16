@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>本地文件上传到github</title>
+    <link href="/2020/01/16/git/"/>
+    <url>/2020/01/16/git/</url>
+    
+    <content type="html"><![CDATA[<p>本地文件上传到github</p><a id="more"></a><h2 id="上传步骤记录"><a href="#上传步骤记录" class="headerlink" title="上传步骤记录"></a>上传步骤记录</h2><pre><code class="batch">    git init    git add .    git commit -m &quot;上传&quot;    git remote add origin 你的github地址    git push -u origin master     //强制上传    git push -u origin +master    //移除origin,重新添加    git remote rm origin    git remote add origin xxxx</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>git</category>
+      
+      <category>github</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+      <tag>github</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>linux多Tomcat部署</title>
     <link href="/2020/01/15/linux%E5%A4%9ATomcat%E9%83%A8%E7%BD%B2/"/>
     <url>/2020/01/15/linux%E5%A4%9ATomcat%E9%83%A8%E7%BD%B2/</url>
